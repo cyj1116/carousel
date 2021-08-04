@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0px;
+        }
+        .app {
+            /*width: 304px;*/
+            overflow: hidden;
+        }
+        .container {
+            position: relative;
+            display: inline-block;
+
+            transition: all 0.5s ease 0.5s;
+            width: max-content;
+            left: 0px;
+            height: 300px;
+        }
+
+        img {
+            float: left;
+            position: absolute;
+            width: 148px;
+            height: 128px;
+            left: 0px
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <div class="container">
+            <img src="image/stamp0001.png" alt="">
+            <img src="image/stamp0002.png" alt="">
+            <img src="image/stamp0003.png" alt="">
+            <img src="image/stamp0004.png" alt="">
+            <img src="image/stamp0005.png" alt="">
+        </div>
+    </div>
+<script>
+const log = console.log.bind(console)
+
+const e = sel => {
+    return document.querySelector(sel)
+}
+
+const es = sel => {
+    let elements = document.querySelectorAll(sel)
+    return Array.from(elements)
+}
+
+const bindEvent = function(element, eventName, callback) {
+    element.addEventListener(eventName, callback)
+}
+
+const carousel = () => {
+    let container = e('.container')
+    let imgs = es('img')
+    let imgWidth = imgs[0].offsetWidth
+    for (let i = 0; i < imgs.length; i++) {
+        const img = imgs[i];
+        img.style.left = `${imgWidth * i}px`
+    }
+
+    setInterval(() => {
+        for (let i = 0; i < imgs.length; i++) {
+            const img = imgs[i];
+            log(img, 'img')
+            let left = parseInt(img.style.left)
+            img.style.left = `${left - imgWidth}px`
+            img.style.transition = 'all 0.5s'
+        }
+    }, 2000)
+
+    bindEvent(container, 'transitionend', event => {
+        let img = event.target
+        let left = parseInt(img.style.left)
+        log(left, 'left')
+        if (left < 0) {
+            img.style.transition = ''
+            left = (imgs.length - 1) * imgWidth
+            img.style.left = `${left}px`
+            setTimeout(() => img.style.transition = `all 0.5s`)
+        }
+    })
+}
+
+const __main = () => {
+    carousel()
+
+}
+__main()
+
+</script>
+</body>
+</html>
