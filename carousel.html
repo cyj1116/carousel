@@ -11,8 +11,11 @@
             margin: 0px;
         }
         .app {
-            /*width: 304px;*/
-            overflow: hidden;
+            position: relative;
+
+            left: 100px;
+            width: 296px;
+            /*overflow: hidden;*/
         }
         .container {
             position: relative;
@@ -27,8 +30,8 @@
         img {
             float: left;
             position: absolute;
-            width: 148px;
-            height: 128px;
+            width: 296px;
+            height: 256px;
             left: 0px
         }
     </style>
@@ -59,29 +62,22 @@ const bindEvent = function(element, eventName, callback) {
     element.addEventListener(eventName, callback)
 }
 
-const carousel = () => {
-    let container = e('.container')
+const initImages = () => {
     let imgs = es('img')
     let imgWidth = imgs[0].offsetWidth
     for (let i = 0; i < imgs.length; i++) {
         const img = imgs[i];
         img.style.left = `${imgWidth * i}px`
     }
+}
 
-    setInterval(() => {
-        for (let i = 0; i < imgs.length; i++) {
-            const img = imgs[i];
-            log(img, 'img')
-            let left = parseInt(img.style.left)
-            img.style.left = `${left - imgWidth}px`
-            img.style.transition = 'all 0.5s'
-        }
-    }, 2000)
-
+const queenUP = () => {
+    let container = e('.container')
+    let imgs = es('img')
+    let imgWidth = imgs[0].offsetWidth
     bindEvent(container, 'transitionend', event => {
         let img = event.target
         let left = parseInt(img.style.left)
-        log(left, 'left')
         if (left < 0) {
             img.style.transition = ''
             left = (imgs.length - 1) * imgWidth
@@ -91,9 +87,26 @@ const carousel = () => {
     })
 }
 
-const __main = () => {
-    carousel()
+const ImageMoveLeft = () => {
+    let imgs = es('img')
+    let imgWidth = imgs[0].offsetWidth
+    for (const img of imgs) {
+        let left = parseInt(img.style.left)
+        img.style.left = `${left - imgWidth}px`
+        img.style.transition = 'all 0.5s'
+    }
+}
 
+const autoPlay = () => {
+    setInterval(() => {
+        ImageMoveLeft()
+    }, 2000)
+}
+
+const __main = () => {
+    initImages()
+    queenUP()
+    autoPlay()
 }
 __main()
 
